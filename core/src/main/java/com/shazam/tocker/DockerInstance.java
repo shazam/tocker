@@ -65,6 +65,14 @@ public class DockerInstance {
         return dockerClient.getHost();
     }
 
+    public ContainerInfo getContainerInfo() {
+        try {
+            return dockerClient.inspectContainer(containerName);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void run() {
         run(alwaysAlive());
     }
