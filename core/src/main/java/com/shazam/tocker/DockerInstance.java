@@ -125,7 +125,7 @@ public class DockerInstance {
         private final ImageStrategy imageStrategy;
         private String imageName;
         private String containerName;
-        private HostConfig hostConfig;
+        private HostConfig.Builder hostConfig = HostConfig.builder();
         private String[] env;
 
         public DockerInstanceBuilder(String imageName) {
@@ -139,7 +139,7 @@ public class DockerInstance {
         }
 
         public DockerInstance build() {
-            return new DockerInstance(imageName, containerName, hostConfig, env, imageStrategy);
+            return new DockerInstance(imageName, containerName, hostConfig.build(), env, imageStrategy);
         }
 
         public DockerInstanceBuilder withContainerName(String containerName) {
@@ -151,7 +151,12 @@ public class DockerInstance {
             Map<String, List<PortBinding>> portBindings = stream(portMaps).collect(toMap(
                     pm -> String.format("%d/tcp", pm.containerPort()),
                     pm -> asList(PortBinding.of("0.0.0.0", pm.localhostPort()))));
-            hostConfig = HostConfig.builder().portBindings(portBindings).build();
+            hostConfig.portBindings(portBindings).build();
+            return this;
+        }
+
+        public DockerInstanceBuilder privileged() {
+            this.hostConfig.privileged(true);
             return this;
         }
 
