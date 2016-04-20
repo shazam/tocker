@@ -2,7 +2,7 @@ allprojects {
     apply plugin: 'idea'
 
     group = "com.shazam.tocker"
-    version = "0.0.10-SNAPSHOT"
+    version = "0.0.10"
 }
 
 subprojects {
